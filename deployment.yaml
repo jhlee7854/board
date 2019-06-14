@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: board-deployment
+  labels:
+    app: board
+spec:
+  selector:
+    matchLabels:
+      app: board
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: board
+    spec:
+      containers:
+        - name: board
+          image: gcr.io/jonghak-edu01/board:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: board
+  name: board-service
+  namespace: default
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: board
+  type: ClusterIP
